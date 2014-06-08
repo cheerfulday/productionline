@@ -1,0 +1,223 @@
+<beans xmlns="http://www.springframework.org/schema/beans"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+        xmlns:context="http://www.springframework.org/schema/context"  
+        xsi:schemaLocation="http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd">  
+          
+        <bean id="taskExecutor"   
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">  
+                <property name="corePoolSize" value="5" />  
+                <property name="maxPoolSize" value="10" />  
+                <property name="WaitForTasksToCompleteOnShutdown" value="true" />  
+        </bean>  
+        
+        <bean id="productionline" class="org.ac.productionline.main.ProductionLine">
+        	<!-- production line's name -->
+           	<constructor-arg index="0"><value>car</value></constructor-arg>
+           	<!-- productAmount: quantity of products to be produce -->
+			<constructor-arg index="1"><value>11</value></constructor-arg>
+			<!-- processCount: quantity of the production line's processes -->
+			<constructor-arg index="2"><value>4</value></constructor-arg>
+			<constructor-arg ref="taskExecutor" /> 
+        </bean>
+        
+        <bean id="material1" class="org.ac.productionline.util.Material">
+        	<!-- material type -->
+           	<property name="name" value="steel"/>
+           	<!-- process time: time needed to be used when processing the material -->
+           	<property name="time" value="40"/>
+        </bean>
+        <bean id="material2" class="org.ac.productionline.util.Material">
+        	<property name="name" value="plastic"/>
+        	<property name="time" value="50"/>
+        </bean>
+        <bean id="material3" class="org.ac.productionline.util.Material">
+        	<property name="name" value="glass"/>
+        	<property name="time" value="90"/>
+        </bean>  
+        <bean id="material4" class="org.ac.productionline.util.Material">
+        	<property name="name" value="rubber"/>
+        	<property name="time" value="25"/>
+        </bean>    
+        <bean id="material5" class="org.ac.productionline.util.Material">
+        	<property name="name" value="aluminium"/>
+        	<property name="time" value="45"/>
+        </bean>          
+                            
+        <bean id="productProcess1" class="org.ac.productionline.main.ProductProcess">
+        	<!-- name of the product unit this product process produce -->
+        	<constructor-arg index="0"><value>car body</value></constructor-arg>
+        	<!-- productionline: the production line this process belongs -->
+			<constructor-arg index="1" ref="productionline"></constructor-arg>
+			<!-- needMaterials: the type mapped with quantity of material this process needed to process a product unit -->
+			<constructor-arg index="2" type="java.util.Map">
+				<map>
+					<entry>
+					<!-- type and of the material -->
+					<key><ref bean="material1"/></key>
+					<!-- quantity of the material -->
+					<value>16</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>9</value>
+					</entry>
+					<entry>
+					<key><ref bean="material3"/></key>
+					<value>5</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<!-- existMaterials: the type mapped with quantity of material this process has in the current time -->
+			<constructor-arg index="3" type="java.util.Map">
+				<map>
+					<entry>
+					<key><ref bean="material1"/></key>
+					<value>10</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>2</value>
+					</entry>
+					<entry>
+					<key><ref bean="material3"/></key>
+					<value>9</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<!-- sumMaxStoreMaterial: the max quantity of all the materials this process can store -->
+			<constructor-arg index="4"><value>60</value></constructor-arg>
+        </bean>
+        
+        <bean id="productProcess2" class="org.ac.productionline.main.ProductProcess">
+        	<constructor-arg index="0"><value>engine</value></constructor-arg>
+			<constructor-arg index="1" ref="productionline"></constructor-arg>
+			<constructor-arg index="2" type="java.util.Map">
+				<map>
+					<entry>
+					<key><ref bean="material1"/></key>
+					<value>6</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>5</value>
+					</entry>
+					<entry>
+					<key><ref bean="material4"/></key>
+					<value>3</value>
+					</entry>
+					<entry>
+					<key><ref bean="material5"/></key>
+					<value>4</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<constructor-arg index="3" type="java.util.Map">
+				<map>
+					<entry>
+					<key><ref bean="material1"/></key>
+					<value>10</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>2</value>
+					</entry>
+					<entry>
+					<key><ref bean="material4"/></key>
+					<value>6</value>
+					</entry>
+					<entry>
+					<key><ref bean="material5"/></key>
+					<value>5</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<constructor-arg index="4"><value>36</value></constructor-arg>
+        </bean>        
+        
+        <bean id="productProcess3" class="org.ac.productionline.main.ProductProcess">
+        	<constructor-arg index="0"><value>chassis</value></constructor-arg>
+			<constructor-arg index="1" ref="productionline"></constructor-arg>
+			<constructor-arg index="2" type="java.util.Map">
+				<map>
+					<entry>
+					<key><ref bean="material1"/></key>
+					<value>11</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>9</value>
+					</entry>
+					<entry>
+					<key><ref bean="material5"/></key>
+					<value>10</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<constructor-arg index="3" type="java.util.Map">
+				<map>
+					<entry>
+					<key><ref bean="material1"/></key>
+					<value>10</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>2</value>
+					</entry>
+					<entry>
+					<key><ref bean="material5"/></key>
+					<value>9</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<constructor-arg index="4"><value>60</value></constructor-arg>
+        </bean>          
+        
+        <bean id="productProcess4" class="org.ac.productionline.main.ProductProcess">
+        	<constructor-arg index="0"><value>electric equipments</value></constructor-arg>
+			<constructor-arg index="1" ref="productionline"></constructor-arg>
+			<constructor-arg index="2" type="java.util.Map">
+				<map>
+					<entry>
+					<key><ref bean="material1"/></key>
+					<value>10</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>6</value>
+					</entry>
+					<entry>
+					<key><ref bean="material4"/></key>
+					<value>9</value>
+					</entry>
+					<entry>
+					<key><ref bean="material5"/></key>
+					<value>4</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<constructor-arg index="3" type="java.util.Map">
+				<map>
+					<entry>
+					<key><ref bean="material1"/></key>
+					<value>10</value>
+					</entry>
+					<entry>
+					<key><ref bean="material2"/></key>
+					<value>2</value>
+					</entry>
+					<entry>
+					<key><ref bean="material4"/></key>
+					<value>6</value>
+					</entry>
+					<entry>
+					<key><ref bean="material5"/></key>
+					<value>5</value>
+					</entry>
+				</map>
+			</constructor-arg>
+			<constructor-arg index="4"><value>60</value></constructor-arg>
+        </bean>  
+</beans>  
